@@ -10,6 +10,9 @@ namespace TradingPlatform.Model
         public string order_type { get; set; } = string.Empty;
         public double limit_price { get; set; }
 
+        public string ticker { get; set; } = string.Empty;
+        public string company_name { get; set; } = string.Empty;
+
 
     }
 }

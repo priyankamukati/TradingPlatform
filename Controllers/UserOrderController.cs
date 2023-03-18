@@ -20,7 +20,7 @@ namespace TradingPlatform.Controllers
         {
             try
             {
-                UserOrderModel data = _db.GetUserOrderById(id);
+                List<UserOrderModel> data = _db.GetUserOrderById(id);
                 return Ok(data);
             }
             catch (Exception ex)

@@ -122,6 +122,7 @@ namespace TradingPlatform.Model
                   where us.user_id == id
                   select new { 
                 ticker = s.ticker,
+                company_name = s.company_name,
                 quantity = us.quantity,
                 stock_id = us.stock_id,
                 current_price =  s.current_price
@@ -132,6 +133,7 @@ namespace TradingPlatform.Model
             {
              
                 ticker = row.ticker,
+                company_name = row.company_name,
                 quantity = row.quantity,
                 stock_id = row.stock_id,
                 current_price =  row.current_price,
@@ -144,24 +146,48 @@ namespace TradingPlatform.Model
             }
 
         }
-        public UserOrderModel GetUserOrderById(int id)
+        public List<UserOrderModel> GetUserOrderById(int id)
         {
-            var row = _context.User_Orders.Where(d=>d.user_id.Equals(id)).FirstOrDefault();
+            // var row = _context.User_Orders.Where(d=>d.user_id.Equals(id)).FirstOrDefault();
 
-            if(row == null) {
-                return new UserOrderModel();
-            }
+            // if(row == null) {
+            //     return new UserOrderModel();
+            // }
+             
+        List<UserOrderModel> response = new List<UserOrderModel>();
+        {
 
-            return new UserOrderModel() {
-                user_id = row.user_id,
-                stock_id = row.stock_id,               
-                quantity = row.quantity,
+            var dataList = (from us in _context.User_Orders
+                  join s in _context.Stocks
+                  on us.stock_id equals s.id
+                  where us.user_id == id
+                  select new { 
+                user_id = us.user_id, 
+                ticker = s.ticker,
+                company_name = s.company_name,
+                quantity = us.quantity,
+                order_nature = us.order_nature,
+                order_type = us.order_type,
+                stock_id = us.stock_id,
+                limit_price =  us.limit_price
+
+                  }).ToList();
+            dataList.ForEach(row => response.Add(new UserOrderModel()
+            {
+
+           
+                user_id = row.user_id,                
+                stock_id = row.stock_id, 
+                ticker = row.ticker,    
+                company_name = row.company_name,
                 order_nature = row.order_nature,
-                order_type = row.order_type,
+                order_type = row.order_type,          
+                quantity = row.quantity,               
                 limit_price =  row.limit_price
 
-            };
-            
+            }));
+              return response;
+            }
         }
     
         public void SaveUserOrder(UserOrderModel userOrderModel)
