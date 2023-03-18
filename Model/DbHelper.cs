@@ -169,7 +169,9 @@ namespace TradingPlatform.Model
                 order_nature = us.order_nature,
                 order_type = us.order_type,
                 stock_id = us.stock_id,
-                limit_price =  us.limit_price
+                limit_price =  us.limit_price,
+                status=us.status,
+                status_reason=us.status_reason
 
                   }).ToList();
             dataList.ForEach(row => response.Add(new UserOrderModel()
@@ -183,7 +185,9 @@ namespace TradingPlatform.Model
                 order_nature = row.order_nature,
                 order_type = row.order_type,          
                 quantity = row.quantity,               
-                limit_price =  row.limit_price
+                limit_price =  row.limit_price,
+                status=row.status,
+                status_reason=row.status_reason
 
             }));
               return response;
@@ -199,9 +203,34 @@ namespace TradingPlatform.Model
             dbUserOrder.order_nature = userOrderModel.order_nature;
             dbUserOrder.order_type  = userOrderModel.order_type ;
             dbUserOrder.limit_price = userOrderModel.limit_price;
+            dbUserOrder.status = "Pending";
+            dbUserOrder.status_reason = "Working on your order";
             dbUserOrder.limit_expiration = 7;
         
             _context.User_Orders.Add(dbUserOrder);
+            _context.SaveChanges();
+        }
+                public UserInfoModel GetUserCashBalanceById(int id)
+        {
+            var row = _context.User_Infos.Where(d=>d.id.Equals(id)).FirstOrDefault();
+
+            if(row == null) {
+                return new UserInfoModel();
+            }
+
+            return new UserInfoModel() {
+
+                cash_balance = row.cash_balance
+            }; 
+        }
+
+        public void SaveUserCashBalance(UpdateCashBalanceRequest updateCashRequest)
+        {
+            var user = _context.User_Infos.Where(f => f.id == updateCashRequest.user_id).FirstOrDefault();
+            if (user == null) throw new Exception("");
+            double newamount = updateCashRequest.amount + user.cash_balance;
+            if(newamount < 0) throw new Exception("");
+            user.cash_balance = newamount;
             _context.SaveChanges();
         }
         }
