@@ -13,10 +13,8 @@ namespace TradingPlatform.Data
         public string username { get; set; } = string.Empty;
         public string email { get; set; } = string.Empty;
         public string type { get; set; } = string.Empty;
-
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime create_date  { get; set; }
-        
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime update_date  { get; set; }
         public double cash_balance { get; set; }

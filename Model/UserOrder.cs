@@ -18,13 +18,12 @@ namespace TradingPlatform.Data
         public string status_reason { get; set; } = string.Empty;
         public string order_type { get; set; } = string.Empty;
         public double limit_price { get; set; }
-        public int limit_expiration { get; set; }
+        public DateTime limit_expiration { get; set; }
         public double transaction_execution_price { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime create_dt  { get; set; }
-        
+        public DateTime create_date  { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime update_dt { get; set; }
+        public DateTime update_date { get; set; }
 
 
     }

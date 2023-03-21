@@ -24,6 +24,10 @@ namespace TradingPlatform.Model
                 company_name = row.company_name,
                 volume =  row.volume,
                 current_price = row.current_price,
+                todays_max_price =row.todays_max_price,
+                todays_min_price = row.todays_min_price, 
+                todays_open_price =row.todays_open_price
+
             }));
             return response;
         }
@@ -148,12 +152,6 @@ namespace TradingPlatform.Model
         }
         public List<UserOrderModel> GetUserOrderById(int id)
         {
-            // var row = _context.User_Orders.Where(d=>d.user_id.Equals(id)).FirstOrDefault();
-
-            // if(row == null) {
-            //     return new UserOrderModel();
-            // }
-             
         List<UserOrderModel> response = new List<UserOrderModel>();
         {
 
@@ -203,9 +201,13 @@ namespace TradingPlatform.Model
             dbUserOrder.order_nature = userOrderModel.order_nature;
             dbUserOrder.order_type  = userOrderModel.order_type ;
             dbUserOrder.limit_price = userOrderModel.limit_price;
-            dbUserOrder.status = "Pending";
+            dbUserOrder.status = "pending";
             dbUserOrder.status_reason = "Working on your order";
-            dbUserOrder.limit_expiration = 7;
+            if(userOrderModel.order_type == "limit"){
+            DateTime today = DateTime.UtcNow;
+            DateTime limitexpiration = today.AddDays(7);
+            dbUserOrder.limit_expiration = limitexpiration;
+            }
         
             _context.User_Orders.Add(dbUserOrder);
             _context.SaveChanges();

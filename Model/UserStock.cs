@@ -13,7 +13,6 @@ namespace TradingPlatform.Data
         public int user_id { get; set; }
         public int stock_id { get; set; }
         public int quantity { get; set; }
-        public double current_price { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime update_date  { get; set; }
 
