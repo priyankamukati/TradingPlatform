@@ -2,7 +2,6 @@ namespace TradingPlatform.Model
 {
     public class UserOrderModel
     {
-        public int user_id { get; set; }
         public int stock_id { get; set; }
         public int quantity { get; set; }
         public string order_nature { get; set; } = string.Empty;
@@ -15,7 +14,7 @@ namespace TradingPlatform.Model
 
         public string status { get; set; } = string.Empty;
         public string status_reason { get; set; } = string.Empty;
-
+        public DateTime update_date { get; set; }
     }
 }
 

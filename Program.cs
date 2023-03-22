@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TradingPlatform.Data;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -10,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(
                 o => o.UseNpgsql(builder.Configuration.GetConnectionString("DB_CONNECTION_STRING")
             ));
+
+/* builder.Services.AddDbContext<DataContext>(
+    o => o.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"))
+); */
 
 builder.Services.AddControllers();
 
@@ -22,9 +27,27 @@ builder.Services.AddCors(options =>
                       policy  =>
                       {
                           policy.WithOrigins("http://localhost:3000",
+                          "http://localhost:3001",
                                               "http://www.contoso.com").AllowAnyHeader()
                                                   .AllowAnyMethod();;
                       });
+});
+
+builder.Services.AddCognitoIdentity();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.Authority = builder.Configuration["AWSCognito:Authority"];
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+                ValidateAudience = false
+    };
 });
 
 var app = builder.Build();
@@ -38,9 +61,12 @@ if (app.Environment.IsDevelopment())
 
 
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllers();
 

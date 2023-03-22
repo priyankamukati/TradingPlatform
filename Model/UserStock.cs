@@ -10,12 +10,11 @@ namespace TradingPlatform.Data
     {
         [Key, Required]
         public int id { get; set; }
-        public int user_id { get; set; }
+        public string user_id { get; set; }
         public int stock_id { get; set; }
         public int quantity { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime update_date  { get; set; }
-
 
     }
 }

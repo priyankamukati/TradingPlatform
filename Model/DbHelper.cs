@@ -70,7 +70,6 @@ namespace TradingPlatform.Model
             var dataList = _context.User_Infos.ToList();
             dataList.ForEach(row => response.Add(new UserInfoModel()
             {
-                id = row.id,               
                 full_name = row.full_name,
                 username = row.username,
                 email = row.email,
@@ -82,16 +81,15 @@ namespace TradingPlatform.Model
             return response;
         }
 
-        public UserInfoModel GetUserInfoById(int id)
+        public UserInfoModel GetUserInfoById(string currentUserID)
         {
-            var row = _context.User_Infos.Where(d=>d.id.Equals(id)).FirstOrDefault();
+            var row = _context.User_Infos.Where(d=>d.id.Equals(currentUserID)).FirstOrDefault();
 
             if(row == null) {
                 return new UserInfoModel();
             }
 
             return new UserInfoModel() {
-                id = row.id,               
                 full_name = row.full_name,
                 username = row.username,
                 email = row.email,
@@ -102,20 +100,38 @@ namespace TradingPlatform.Model
             }; 
         }
 
-        public void SaveUserInfo(UserInfoModel userInfoModel)
+        public void UpdateUserInfo(UserInfoModel userInfoModel, string currentUserID)
         {
+            Console.WriteLine("update userInfoModel : ", userInfoModel.username);
+            Console.WriteLine("update userInfoModel : ", userInfoModel.full_name);
+
+            var user = _context.User_Infos.Where(d=>d.id.Equals(currentUserID)).FirstOrDefault();
+            if (user == null) throw new Exception("");
+            user.full_name = userInfoModel.full_name;
+            user.username = userInfoModel.username;
+            user.email  = userInfoModel.email ;
+            user.type = userInfoModel.type;
+            user.cash_balance = userInfoModel.cash_balance;   
+            user.update_date = DateTime.UtcNow;     
+            _context.SaveChanges();
+        }
+
+        public void SaveUserInfo(UserInfoModel userInfoModel, string currentUserID)
+        {
+            Console.WriteLine("save userInfoModel : ", userInfoModel.ToString());
             user_info dbUserInfo = new user_info();
-            dbUserInfo.id = userInfoModel.id;
+            dbUserInfo.id = currentUserID;
             dbUserInfo.full_name = userInfoModel.full_name;
             dbUserInfo.username = userInfoModel.username;
             dbUserInfo.email  = userInfoModel.email ;
             dbUserInfo.type = userInfoModel.type;
-            dbUserInfo.cash_balance = 500;            
+            dbUserInfo.cash_balance = 500;      
+            dbUserInfo.update_date = DateTime.UtcNow;          
             _context.User_Infos.Add(dbUserInfo);
             _context.SaveChanges();
         }
 
-        public List<UserStockModel> GetUserStockById(int id)
+        public List<UserStockModel> GetUserStockById(string id)
         {
            List<UserStockModel> response = new List<UserStockModel>();
         {
@@ -148,9 +164,9 @@ namespace TradingPlatform.Model
              return response;
         
             }
-
         }
-        public List<UserOrderModel> GetUserOrderById(int id)
+
+        public List<UserOrderModel> GetUserOrderById(string id)
         {
         List<UserOrderModel> response = new List<UserOrderModel>();
         {
@@ -169,14 +185,13 @@ namespace TradingPlatform.Model
                 stock_id = us.stock_id,
                 limit_price =  us.limit_price,
                 status=us.status,
-                status_reason=us.status_reason
+                status_reason=us.status_reason,
+                update_date = us.update_date
 
                   }).ToList();
-            dataList.ForEach(row => response.Add(new UserOrderModel()
-            {
 
-           
-                user_id = row.user_id,                
+            dataList.ForEach(row => response.Add(new UserOrderModel()
+            {              
                 stock_id = row.stock_id, 
                 ticker = row.ticker,    
                 company_name = row.company_name,
@@ -185,17 +200,18 @@ namespace TradingPlatform.Model
                 quantity = row.quantity,               
                 limit_price =  row.limit_price,
                 status=row.status,
-                status_reason=row.status_reason
+                status_reason=row.status_reason,
+                update_date = row.update_date
 
             }));
               return response;
             }
         }
     
-        public void SaveUserOrder(UserOrderModel userOrderModel)
+        public void SaveUserOrder(UserOrderModel userOrderModel, string currentUserID)
         {
             user_order dbUserOrder = new user_order();
-            dbUserOrder.user_id = userOrderModel.user_id;
+            dbUserOrder.user_id = currentUserID;
             dbUserOrder.stock_id = userOrderModel.stock_id;
             dbUserOrder.quantity = userOrderModel.quantity;
             dbUserOrder.order_nature = userOrderModel.order_nature;
@@ -212,9 +228,9 @@ namespace TradingPlatform.Model
             _context.User_Orders.Add(dbUserOrder);
             _context.SaveChanges();
         }
-                public UserInfoModel GetUserCashBalanceById(int id)
+                public UserInfoModel GetUserCashBalanceById(string currentUserID)
         {
-            var row = _context.User_Infos.Where(d=>d.id.Equals(id)).FirstOrDefault();
+            var row = _context.User_Infos.Where(d=>d.id.Equals(currentUserID)).FirstOrDefault();
 
             if(row == null) {
                 return new UserInfoModel();
@@ -226,13 +242,14 @@ namespace TradingPlatform.Model
             }; 
         }
 
-        public void SaveUserCashBalance(UpdateCashBalanceRequest updateCashRequest)
+        public void SaveUserCashBalance(UpdateCashBalanceRequest updateCashRequest, string currentUserID)
         {
-            var user = _context.User_Infos.Where(f => f.id == updateCashRequest.user_id).FirstOrDefault();
+            var user = _context.User_Infos.Where(f => f.id == currentUserID).FirstOrDefault();
             if (user == null) throw new Exception("");
             double newamount = updateCashRequest.amount + user.cash_balance;
             if(newamount < 0) throw new Exception("");
             user.cash_balance = newamount;
+            user.update_date = DateTime.UtcNow;     
             _context.SaveChanges();
         }
         }

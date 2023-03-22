@@ -10,7 +10,7 @@ namespace TradingPlatform.Data
     {
         [Key, Required]
         public int id { get; set; }
-        public int user_id { get; set; }
+        public string user_id { get; set; }
         public int stock_id { get; set; }
         public string order_nature { get; set; } = string.Empty;
         public int quantity { get; set; }

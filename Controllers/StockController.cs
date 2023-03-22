@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TradingPlatform.Data;
 using TradingPlatform.Model;
 
 namespace TradingPlatform.Controllers
 {
     [ApiController]
+    [Authorize]
     public class StockController : ControllerBase
     {
         private readonly DbHelper _db;
@@ -18,7 +21,7 @@ namespace TradingPlatform.Controllers
         public IActionResult Get()
         {
             try
-            {
+            {                
                 IEnumerable<StockModel> data = _db.GetStocks();
                 return Ok(data);
             }

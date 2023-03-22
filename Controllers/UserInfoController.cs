@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TradingPlatform.Data;
 using TradingPlatform.Model;
@@ -5,6 +7,7 @@ using TradingPlatform.Model;
 namespace TradingPlatform.Controllers
 {
     [ApiController]
+    [Authorize]
     public class UserInfoController : ControllerBase
     {
         private readonly DbHelper _db;
@@ -14,8 +17,8 @@ namespace TradingPlatform.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]")]
-        public IActionResult Get()
+        [Route("api/[controller]/all")]
+        public IActionResult GetAll()
         {
             try
             {
@@ -29,13 +32,20 @@ namespace TradingPlatform.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/{id}")]
-        public IActionResult Get(int id)
+        [Route("api/[controller]")]
+        public IActionResult Get()
         {
             try
             {
-                UserInfoModel data = _db.GetUserInfoById(id);
-                return Ok(data);
+               ClaimsPrincipal currentUser = this.User;
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;            
+
+                if(currentUserID != null) {
+                    UserInfoModel data = _db.GetUserInfoById(currentUserID);
+                    return Ok(data);
+                } else {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -49,7 +59,7 @@ namespace TradingPlatform.Controllers
         {
             try
             {
-                if (model.email.Contains("@sunshine"))
+                if (model.passcode.Contains("500"))
                 {
                     model.type = "admin";
                 }
@@ -57,9 +67,28 @@ namespace TradingPlatform.Controllers
                 {
                     model.type = "user";
                 }
+
+                ClaimsPrincipal currentUser = this.User;
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;            
+            Console.WriteLine("update currentUserID : ", currentUserID);
+
+                if(currentUserID != null) {
+                    UserInfoModel data = _db.GetUserInfoById(currentUserID);
+            Console.WriteLine("update data : ", data.ToString());
+
+                    if(data.id.Equals("")) {
+                        model.cash_balance = data.cash_balance;
+                        _db.UpdateUserInfo(model, currentUserID);
+                    } else {
+                        _db.SaveUserInfo(model, currentUserID);
+                    }
+                    
+                    return Ok(model);
+                } else {
+                    return NotFound();
+                }
                 
-                _db.SaveUserInfo(model);
-                return Ok(model);
+
             }
             catch (Exception ex)
             {
