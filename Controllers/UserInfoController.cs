@@ -37,13 +37,16 @@ namespace TradingPlatform.Controllers
         {
             try
             {
-               ClaimsPrincipal currentUser = this.User;
-                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;            
+                ClaimsPrincipal currentUser = this.User;
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if(currentUserID != null) {
+                if (currentUserID != null)
+                {
                     UserInfoModel data = _db.GetUserInfoById(currentUserID);
                     return Ok(data);
-                } else {
+                }
+                else
+                {
                     return NotFound();
                 }
             }
@@ -69,25 +72,31 @@ namespace TradingPlatform.Controllers
                 }
 
                 ClaimsPrincipal currentUser = this.User;
-                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;            
-            Console.WriteLine("update currentUserID : ", currentUserID);
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                Console.WriteLine("update currentUserID : ", currentUserID);
 
-                if(currentUserID != null) {
+                if (currentUserID != null)
+                {
                     UserInfoModel data = _db.GetUserInfoById(currentUserID);
-            Console.WriteLine("update data : ", data.ToString());
+                    Console.WriteLine("update data : ", data.ToString());
 
-                    if(data.id.Equals("")) {
+                    if (data.id.Equals(""))
+                    {
                         model.cash_balance = data.cash_balance;
                         _db.UpdateUserInfo(model, currentUserID);
-                    } else {
+                    }
+                    else
+                    {
                         _db.SaveUserInfo(model, currentUserID);
                     }
-                    
+
                     return Ok(model);
-                } else {
+                }
+                else
+                {
                     return NotFound();
                 }
-                
+
 
             }
             catch (Exception ex)

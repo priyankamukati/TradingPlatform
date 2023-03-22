@@ -27,16 +27,19 @@ namespace TradingPlatform.Controllers
                 var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
 
-                if(currentUserID != null) {
-                List<UserOrderModel> data = _db.GetUserOrderById(currentUserID);
-                return Ok(data);
-                } else {
+                if (currentUserID != null)
+                {
+                    List<UserOrderModel> data = _db.GetUserOrderById(currentUserID);
+                    return Ok(data);
+                }
+                else
+                {
                     return NotFound();
                 }
 
             }
             catch (Exception ex)
-            { 
+            {
                 return BadRequest(ex);
             }
         }
@@ -50,10 +53,13 @@ namespace TradingPlatform.Controllers
                 ClaimsPrincipal currentUser = this.User;
                 var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if(currentUserID != null) {
+                if (currentUserID != null)
+                {
                     _db.SaveUserOrder(model, currentUserID);
-                return Ok(model);
-                } else {
+                    return Ok(model);
+                }
+                else
+                {
                     return NotFound();
                 }
             }

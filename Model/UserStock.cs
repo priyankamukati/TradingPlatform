@@ -14,7 +14,7 @@ namespace TradingPlatform.Data
         public int stock_id { get; set; }
         public int quantity { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime update_date  { get; set; }
+        public DateTime update_date { get; set; }
 
     }
 }

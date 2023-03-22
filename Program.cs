@@ -3,7 +3,7 @@ using TradingPlatform.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,12 +24,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy  =>
+                      policy =>
                       {
                           policy.WithOrigins("http://localhost:3000",
                           "http://localhost:3001",
                                               "http://www.contoso.com").AllowAnyHeader()
-                                                  .AllowAnyMethod();;
+                                                  .AllowAnyMethod(); ;
                       });
 });
 
@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-                ValidateAudience = false
+        ValidateAudience = false
     };
 });
 

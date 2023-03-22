@@ -26,13 +26,16 @@ namespace TradingPlatform.Controllers
                 ClaimsPrincipal currentUser = this.User;
                 var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if(currentUserID != null) {
+                if (currentUserID != null)
+                {
                     UserInfoModel data = _db.GetUserCashBalanceById(currentUserID);
                     return Ok(data);
-                } else {
+                }
+                else
+                {
                     return NotFound();
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -49,10 +52,13 @@ namespace TradingPlatform.Controllers
                 ClaimsPrincipal currentUser = this.User;
                 var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if(currentUserID != null) {
+                if (currentUserID != null)
+                {
                     _db.SaveUserCashBalance(model, currentUserID);
                     return Ok(model);
-                } else {
+                }
+                else
+                {
                     return NotFound();
                 }
             }

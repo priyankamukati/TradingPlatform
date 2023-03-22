@@ -21,12 +21,12 @@ namespace TradingPlatform.Controllers
         public IActionResult Get()
         {
             try
-            {                
+            {
                 IEnumerable<StockModel> data = _db.GetStocks();
                 return Ok(data);
             }
             catch (Exception ex)
-            { 
+            {
                 return BadRequest(ex);
             }
         }
@@ -41,7 +41,7 @@ namespace TradingPlatform.Controllers
                 return Ok(data);
             }
             catch (Exception ex)
-            { 
+            {
                 return BadRequest(ex);
             }
         }

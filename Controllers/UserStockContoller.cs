@@ -25,12 +25,15 @@ namespace TradingPlatform.Controllers
                 ClaimsPrincipal currentUser = this.User;
                 var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if(currentUserID != null) {
+                if (currentUserID != null)
+                {
                     List<UserStockModel> data = _db.GetUserStockById(currentUserID);
                     return Ok(data);
-                } else {
+                }
+                else
+                {
                     return NotFound();
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -39,6 +42,6 @@ namespace TradingPlatform.Controllers
         }
 
 
-        }
     }
+}
 

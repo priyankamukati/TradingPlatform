@@ -21,7 +21,7 @@ namespace TradingPlatform.Data
         public DateTime limit_expiration { get; set; }
         public double transaction_execution_price { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime create_date  { get; set; }
+        public DateTime create_date { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime update_date { get; set; }
 
