@@ -17,8 +17,8 @@ namespace TradingPlatform.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/{id}")]
-        public IActionResult Get(int id)
+        [Route("api/[controller]")]
+        public IActionResult Get()
         {
             try
             {

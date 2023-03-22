@@ -61,6 +61,9 @@ namespace TradingPlatform.Model
             dbStock.company_name = stockModel.company_name;
             dbStock.volume = stockModel.volume;
             dbStock.current_price = stockModel.current_price;
+            dbStock.todays_min_price = stockModel.current_price;
+            dbStock.todays_max_price = stockModel.current_price;
+            dbStock.todays_open_price = stockModel.current_price;
 
             //_context.Database.Log = Console.Write;
             _context.Stocks.Add(dbStock);
@@ -135,7 +138,7 @@ namespace TradingPlatform.Model
             _context.SaveChanges();
         }
 
-        public List<UserStockModel> GetUserStockById(string id)
+        public List<UserStockModel> GetUserStockById(string currentUserID)
         {
             List<UserStockModel> response = new List<UserStockModel>();
             {
@@ -143,7 +146,7 @@ namespace TradingPlatform.Model
                 var dataList = (from us in _context.User_Stocks
                                 join s in _context.Stocks
                                 on us.stock_id equals s.id
-                                where us.user_id == id
+                                where us.user_id == currentUserID
                                 select new
                                 {
                                     ticker = s.ticker,
@@ -171,7 +174,7 @@ namespace TradingPlatform.Model
             }
         }
 
-        public List<UserOrderModel> GetUserOrderById(string id)
+        public List<UserOrderModel> GetUserOrderById(string currentUserID)
         {
             List<UserOrderModel> response = new List<UserOrderModel>();
             {
@@ -179,7 +182,7 @@ namespace TradingPlatform.Model
                 var dataList = (from us in _context.User_Orders
                                 join s in _context.Stocks
                                 on us.stock_id equals s.id
-                                where us.user_id == id
+                                where us.user_id == currentUserID
                                 select new
                                 {
                                     user_id = us.user_id,

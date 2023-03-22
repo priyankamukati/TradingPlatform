@@ -80,14 +80,15 @@ namespace TradingPlatform.Controllers
                     UserInfoModel data = _db.GetUserInfoById(currentUserID);
                     Console.WriteLine("update data : ", data.ToString());
 
-                    if (data.id.Equals(""))
-                    {
-                        model.cash_balance = data.cash_balance;
-                        _db.UpdateUserInfo(model, currentUserID);
-                    }
-                    else
+                    if (data.email.Equals(""))
                     {
                         _db.SaveUserInfo(model, currentUserID);
+                    }
+                    
+                    else
+                    {                       
+                        model.cash_balance = data.cash_balance;
+                        _db.UpdateUserInfo(model, currentUserID);
                     }
 
                     return Ok(model);
