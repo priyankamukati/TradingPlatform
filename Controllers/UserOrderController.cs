@@ -68,5 +68,32 @@ namespace TradingPlatform.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpPost]
+        [Route("api/[controller]/cancel")]
+        public IActionResult Post([FromBody] CancelOrderModel model)
+        {
+            try
+            {
+                ClaimsPrincipal currentUser = this.User;
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (currentUserID != null)
+                {
+                    _db.CancelUserOrder(model, currentUserID);
+                    return Ok(model);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
     }
 }

@@ -2,6 +2,7 @@ namespace TradingPlatform.Model
 {
     public class UserOrderModel
     {
+        public int id { get; set; }
         public int stock_id { get; set; }
         public int quantity { get; set; }
         public string order_nature { get; set; } = string.Empty;

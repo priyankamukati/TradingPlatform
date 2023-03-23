@@ -97,6 +97,7 @@ namespace TradingPlatform.Model
 
             return new UserInfoModel()
             {
+                id = row.id,
                 full_name = row.full_name,
                 username = row.username,
                 email = row.email,
@@ -185,6 +186,7 @@ namespace TradingPlatform.Model
                                 where us.user_id == currentUserID
                                 select new
                                 {
+                                    id = us.id,
                                     user_id = us.user_id,
                                     ticker = s.ticker,
                                     company_name = s.company_name,
@@ -201,6 +203,7 @@ namespace TradingPlatform.Model
 
                 dataList.ForEach(row => response.Add(new UserOrderModel()
                 {
+                    id = row.id,
                     stock_id = row.stock_id,
                     ticker = row.ticker,
                     company_name = row.company_name,
@@ -238,6 +241,16 @@ namespace TradingPlatform.Model
             _context.User_Orders.Add(dbUserOrder);
             _context.SaveChanges();
         }
+
+        public void CancelUserOrder(CancelOrderModel userOrderModel, string currentUserID)
+        {
+            var userOrder = _context.User_Orders.Where(f => f.id == userOrderModel.order_id && f.user_id == currentUserID).FirstOrDefault();
+            if (userOrder == null) throw new Exception("");
+            userOrder.status = "canceled";
+            userOrder.update_date = DateTime.UtcNow;
+            _context.SaveChanges();
+        }
+
         public UserInfoModel GetUserCashBalanceById(string currentUserID)
         {
             var row = _context.User_Infos.Where(d => d.id.Equals(currentUserID)).FirstOrDefault();
